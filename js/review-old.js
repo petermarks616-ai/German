@@ -11,206 +11,160 @@ class ReviewOldWords {
         this.correctCount = 0;
         this.wrongCount = 0;
         this.startTime = null;
-        
-        // 确保元素存在
-        this.modeSelector = document.getElementById('modeSelector');
-        this.reviewCard = document.getElementById('reviewCard');
-        
-        // 如果没有学习过单词，直接显示消息
         this.progressManager = new ProgressManager();
-        this.words = this.progressManager.getWordsForReview(10);
-        
-        console.log('📊 复习词汇:', this.words);
-        console.log('词汇数量:', this.words.length);
-        
         this.init();
     }
 
-    init() {
-        // 如果没有单词，显示提示
-        if (this.words.length === 0) {
-            this.showNoWordsMessage();
-            return;
-        }
+    async init() {
+        console.log('📋 开始初始化复习');
         
-        // 显示模式选择器，隐藏复习卡片
-        if (this.modeSelector) {
-            this.modeSelector.style.display = 'block';
-        }
-        if (this.reviewCard) {
-            this.reviewCard.style.display = 'none';
-        }
+        // 显示模式选择器
+        this.showModeSelector();
         
+        // 设置事件监听器
         this.setupEventListeners();
-        this.updateTotalWords();
+    }
+
+    showModeSelector() {
+        console.log('🎮 显示模式选择器');
+        // 确保模式选择器可见
+        document.getElementById('modeSelector').style.display = 'block';
+        document.getElementById('reviewCard').style.display = 'none';
+        document.getElementById('learningCard').style.display = 'none';
     }
 
     setupEventListeners() {
-        console.log('🎮 设置事件监听器');
+        console.log('🔗 设置事件监听器');
         
         // 开始复习按钮
         const startReviewBtn = document.getElementById('startReviewBtn');
         if (startReviewBtn) {
             startReviewBtn.addEventListener('click', () => {
-                console.log('▶️ 开始复习');
+                console.log('🚀 开始复习');
                 this.startReview();
             });
         }
         
-        // 跳过按钮
-        const skipBtn = document.getElementById('skipBtn');
-        if (skipBtn) {
-            skipBtn.addEventListener('click', () => {
-                console.log('⏭️ 跳过此题');
-                this.nextWord();
+        // 模式选择卡片
+        const modeCards = document.querySelectorAll('.mode-card');
+        modeCards.forEach(card => {
+            card.addEventListener('click', () => {
+                // 移除所有 active 类
+                modeCards.forEach(c => c.classList.remove('active'));
+                // 添加 active 类到点击的卡片
+                card.classList.add('active');
             });
-        }
-        
-        // 提示按钮
-        const showHintBtn = document.getElementById('showHintBtn');
-        if (showHintBtn) {
-            showHintBtn.addEventListener('click', () => {
-                const hintContent = document.getElementById('hintContent');
-                if (hintContent) {
-                    hintContent.style.display = 'block';
-                }
-            });
-        }
+        });
     }
 
-    startReview() {
-        console.log('🚀 开始复习流程');
+    async startReview() {
+        console.log('📖 开始复习流程');
         
-        // 隐藏模式选择器，显示复习卡片
-        if (this.modeSelector) {
-            this.modeSelector.style.display = 'none';
-        }
-        if (this.reviewCard) {
-            this.reviewCard.style.display = 'block';
+        // 获取要复习的单词
+        this.words = this.progressManager.getWordsForReview(10);
+        console.log('📚 复习词汇:', this.words);
+        
+        if (this.words.length === 0) {
+            this.showNoWordsMessage();
+            return;
         }
         
-        // 初始化统计
+        // 重置计数器
+        this.currentIndex = 0;
         this.correctCount = 0;
         this.wrongCount = 0;
         this.startTime = new Date();
         
+        // 更新总单词数显示
+        document.getElementById('totalWords').textContent = this.words.length;
+        
+        // 显示复习卡片，隐藏模式选择器
+        document.getElementById('modeSelector').style.display = 'none';
+        document.getElementById('reviewCard').style.display = 'block';
+        
         // 加载第一个单词
-        this.currentIndex = 0;
-        this.loadWord();
-    }
-
-    async loadWord() {
-        console.log(`📖 加载单词 ${this.currentIndex + 1}/${this.words.length}`);
-        
-        if (this.currentIndex >= this.words.length) {
-            this.showCompletion();
-            return;
-        }
-        
-        this.currentWord = this.words[this.currentIndex];
-        
-        // 获取单词详情
-        const wordData = await this.getWordDetails(this.currentWord);
-        this.currentWord = wordData;
-        
-        this.renderWord();
-        this.generateOptions();
+        await this.loadWord();
         
         // 更新统计显示
         this.updateStats();
     }
 
-    async getWordDetails(word) {
-        console.log('🔍 获取单词详情:', word);
-        
-        // 这里应该是从API或本地存储获取单词详情
-        // 简化实现：使用预设的单词数据
-        const vocabulary = {
-            "der Apfel": {
-                german: "der Apfel",
-                translation: "苹果",
-                partOfSpeech: "名词",
-                examples: [{ german: "Der Apfel ist rot.", chinese: "这个苹果是红色的。" }],
-                hints: ["梨子", "香蕉", "橙子"],
-                difficulty: "初级"
-            },
-            "die Schule": {
-                german: "die Schule",
-                translation: "学校",
-                partOfSpeech: "名词",
-                examples: [{ german: "Ich gehe zur Schule.", chinese: "我去学校。" }],
-                hints: ["家庭", "工作", "商店"],
-                difficulty: "初级"
-            },
-            "das Buch": {
-                german: "das Buch",
-                translation: "书",
-                partOfSpeech: "名词",
-                examples: [{ german: "Das Buch ist interessant.", chinese: "这本书很有趣。" }],
-                hints: ["杂志", "报纸", "笔记本"],
-                difficulty: "初级"
-            },
-            "der Tisch": {
-                german: "der Tisch",
-                translation: "桌子",
-                partOfSpeech: "名词",
-                examples: [{ german: "Der Tisch ist groß.", chinese: "这张桌子很大。" }],
-                hints: ["椅子", "沙发", "床"],
-                difficulty: "初级"
-            },
-            "die Tür": {
-                german: "die Tür",
-                translation: "门",
-                partOfSpeech: "名词",
-                examples: [{ german: "Die Tür ist geschlossen.", chinese: "门关着。" }],
-                hints: ["窗户", "墙", "地板"],
-                difficulty: "初级"
-            }
-        };
-        
-        // 如果有预设数据，使用预设数据
-        if (vocabulary[word]) {
-            return vocabulary[word];
+    async loadWord() {
+        if (this.currentIndex >= this.words.length) {
+            this.showCompletion();
+            return;
         }
         
-        // 否则返回默认数据
+        const word = this.words[this.currentIndex];
+        console.log(`📝 加载单词 ${this.currentIndex + 1}:`, word);
+        
+        // 获取单词详细信息
+        this.currentWord = await this.getWordDetails(word);
+        
+        // 渲染单词
+        this.renderWord();
+        
+        // 生成选项
+        this.generateOptions();
+    }
+
+    async getWordDetails(word) {
+        // 这里可以调用API获取单词详情，或从本地存储获取
+        // 简化实现，使用示例数据
         return {
             german: word,
-            translation: word + "的翻译",
-            partOfSpeech: "名词",
-            examples: [{ german: "Beispielsatz mit " + word, chinese: "包含" + word + "的例句" }],
-            hints: ["错误选项1", "错误选项2", "错误选项3"],
-            difficulty: "初级"
+            translation: this.getTranslationForWord(word),
+            partOfSpeech: '名词',
+            examples: [{ german: `${word} ist gut.`, chinese: '这个很好。' }],
+            hints: this.generateWrongOptions(word)
         };
     }
 
+    getTranslationForWord(word) {
+        // 简单映射，实际情况应该从数据库或API获取
+        const translations = {
+            'der Apfel': '苹果',
+            'die Schule': '学校',
+            'das Buch': '书',
+            'der Tisch': '桌子',
+            'die Tür': '门',
+            'das Fenster': '窗户',
+            'der Stuhl': '椅子',
+            'die Lampe': '灯',
+            'der Computer': '电脑',
+            'das Handy': '手机'
+        };
+        
+        return translations[word] || '示例翻译';
+    }
+
+    generateWrongOptions(correctWord) {
+        // 生成错误选项
+        const allTranslations = [
+            '苹果', '学校', '书', '桌子', '门',
+            '窗户', '椅子', '灯', '电脑', '手机',
+            '汽车', '房子', '猫', '狗', '水'
+        ];
+        
+        const correctTranslation = this.getTranslationForWord(correctWord);
+        const wrongTranslations = allTranslations.filter(t => t !== correctTranslation);
+        
+        // 随机选择3个错误选项
+        const shuffled = wrongTranslations.sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, 3);
+    }
+
     renderWord() {
-        console.log('🎨 渲染单词');
+        console.log(`🎨 渲染单词 ${this.currentIndex + 1}/${this.words.length}`);
         
         // 更新德语单词
-        const germanWord = document.getElementById('reviewGermanWord');
-        if (germanWord) {
-            germanWord.textContent = this.currentWord.german;
-        }
+        document.getElementById('reviewGermanWord').textContent = this.currentWord.german;
         
-        // 更新单词类别
-        const wordCategory = document.getElementById('wordCategory');
-        if (wordCategory) {
-            wordCategory.textContent = `${this.currentWord.partOfSpeech}复习`;
-        }
-        
-        // 更新难度
-        const difficulty = document.getElementById('reviewDifficulty');
-        if (difficulty) {
-            difficulty.textContent = this.currentWord.difficulty || "中等";
-        }
-        
+        // 更新进度条
         this.updateProgressBar();
     }
 
     generateOptions() {
-        console.log('🔢 生成选项');
-        
         // 生成4个选项（1个正确，3个干扰项）
         this.options = [
             { text: this.currentWord.translation, correct: true },
@@ -222,11 +176,6 @@ class ReviewOldWords {
 
     renderOptions() {
         const container = document.getElementById('optionsContainer');
-        if (!container) {
-            console.error('❌ 选项容器不存在');
-            return;
-        }
-        
         container.innerHTML = '';
         
         this.options.forEach((option, index) => {
@@ -253,32 +202,114 @@ class ReviewOldWords {
             }
         });
 
-        // 更新统计
-        if (option.correct) {
-            this.correctCount++;
-        } else {
-            this.wrongCount++;
-        }
-        
-        this.updateStats();
-
         setTimeout(() => {
             if (option.correct) {
+                this.correctCount++;
                 this.nextWord();
             } else {
-                // 这里可以显示学习卡片，但为了简化，我们先直接进入下一个
-                this.nextWord();
+                this.wrongCount++;
+                this.showLearningCard();
             }
         }, 1500);
     }
 
-    nextWord() {
-        console.log('➡️ 下一个单词');
+    showLearningCard() {
+        console.log('📖 显示学习卡片');
         
+        // 隐藏复习卡片，显示学习卡片
+        document.getElementById('reviewCard').style.display = 'none';
+        
+        // 创建或显示学习卡片
+        const learningCard = document.getElementById('learningCard');
+        if (learningCard) {
+            learningCard.style.display = 'block';
+            learningCard.innerHTML = this.createLearningCardContent();
+        } else {
+            // 如果学习卡片不存在，创建它
+            this.createLearningCard();
+        }
+    }
+
+    createLearningCardContent() {
+        return `
+            <div class="word-section">
+                <div class="word-header">
+                    <span class="word-number">#${this.currentIndex + 1}</span>
+                    <span class="difficulty-badge">复习</span>
+                </div>
+                
+                <div class="word-content">
+                    <h1 class="german-word">${this.currentWord.german}</h1>
+                    
+                    <div class="word-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-tag"></i>
+                            <span class="meta-label">词性</span>
+                            <span class="meta-value">${this.currentWord.partOfSpeech}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="translation-section">
+                <h3 class="section-title">
+                    <i class="fas fa-language"></i>
+                    正确翻译
+                </h3>
+                <div class="translation-card">
+                    <div class="translation-content">
+                        <span class="translation-text">${this.currentWord.translation}</span>
+                        <div class="translation-details">
+                            <span class="category">${this.currentWord.partOfSpeech}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="examples-section">
+                <h3 class="section-title">
+                    <i class="fas fa-comment-alt"></i>
+                    例句
+                </h3>
+                <div class="examples-container">
+                    ${this.currentWord.examples.map(example => `
+                        <div class="example-card">
+                            <div class="example-content">
+                                <p class="german-example">${example.german}</p>
+                                <p class="chinese-example">${example.chinese}</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <button class="control-btn primary-btn" id="continueBtn">
+                    <i class="fas fa-arrow-right"></i>
+                    继续复习
+                </button>
+            </div>
+        `;
+    }
+
+    nextWord() {
+        console.log('➡️ 进入下一个单词');
+        
+        // 隐藏学习卡片（如果显示）
+        const learningCard = document.getElementById('learningCard');
+        if (learningCard) {
+            learningCard.style.display = 'none';
+        }
+        
+        // 显示复习卡片
+        document.getElementById('reviewCard').style.display = 'block';
+        
+        // 移动到下一个单词
         this.currentIndex++;
         
         if (this.currentIndex < this.words.length) {
             this.loadWord();
+            this.updateStats();
         } else {
             this.showCompletion();
         }
@@ -293,7 +324,7 @@ class ReviewOldWords {
             progressFill.style.width = `${progress}%`;
         }
         
-        // 更新进度文本 - 注意HTML中使用的是reviewProgressCount
+        // 更新进度文本 - 使用正确的 ID
         const progressCount = document.getElementById('reviewProgressCount');
         if (progressCount) {
             progressCount.textContent = `${this.currentIndex + 1}/${this.words.length}`;
@@ -304,7 +335,6 @@ class ReviewOldWords {
         // 更新正确/错误计数
         const correctCountElement = document.getElementById('correctCount');
         const wrongCountElement = document.getElementById('wrongCount');
-        const timeSpentElement = document.getElementById('timeSpent');
         
         if (correctCountElement) {
             correctCountElement.textContent = this.correctCount;
@@ -312,62 +342,56 @@ class ReviewOldWords {
         if (wrongCountElement) {
             wrongCountElement.textContent = this.wrongCount;
         }
-        if (timeSpentElement && this.startTime) {
-            const seconds = Math.floor((new Date() - this.startTime) / 1000);
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-            timeSpentElement.textContent = `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-        }
-    }
-
-    updateTotalWords() {
-        const totalWordsElement = document.getElementById('totalWords');
-        if (totalWordsElement) {
-            totalWordsElement.textContent = this.words.length;
+        
+        // 更新时间
+        if (this.startTime) {
+            const timeSpentElement = document.getElementById('timeSpent');
+            if (timeSpentElement) {
+                const elapsed = Math.floor((new Date() - this.startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                timeSpentElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
         }
     }
 
     showCompletion() {
         console.log('🏆 显示完成消息');
         
-        const modal = document.getElementById('reviewCompletionModal');
-        if (modal) {
-            modal.style.display = 'flex';
-            
-            // 更新完成统计
-            const finalCorrect = document.getElementById('finalCorrect');
-            const finalTime = document.getElementById('finalTime');
-            const scoreValue = document.querySelector('.score-value');
-            
-            if (finalCorrect) {
-                finalCorrect.textContent = `${this.correctCount}个`;
-            }
-            
-            if (finalTime && this.startTime) {
-                const seconds = Math.floor((new Date() - this.startTime) / 1000);
-                const minutes = Math.floor(seconds / 60);
-                const remainingSeconds = seconds % 60;
-                finalTime.textContent = `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-            }
-            
-            if (scoreValue) {
-                const score = Math.round((this.correctCount / this.words.length) * 100);
-                scoreValue.textContent = `${score}%`;
-            }
-            
-            // 绑定完成弹窗的按钮
-            this.bindCompletionModalButtons();
-        } else {
-            // 如果没有弹窗，使用简单提示
-            alert(`复习完成！\n正确: ${this.correctCount}个\n错误: ${this.wrongCount}个`);
-            window.location.href = 'overview.html';
+        // 计算正确率
+        const total = this.correctCount + this.wrongCount;
+        const accuracy = total > 0 ? Math.round((this.correctCount / total) * 100) : 0;
+        
+        // 计算用时
+        const endTime = new Date();
+        const timeDiff = Math.round((endTime - this.startTime) / 1000);
+        const minutes = Math.floor(timeDiff / 60);
+        const seconds = timeDiff % 60;
+        
+        // 更新完成弹窗内容
+        document.getElementById('finalCorrect').textContent = `${this.correctCount}个`;
+        document.getElementById('finalTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        // 计算积分
+        const points = this.correctCount * 10;
+        document.getElementById('pointsEarned').textContent = `+${points}`;
+        
+        // 更新正确率圆圈
+        const scoreCircle = document.getElementById('scoreCircle');
+        if (scoreCircle) {
+            scoreCircle.style.background = `conic-gradient(var(--primary-500) ${accuracy}%, var(--secondary-200) 0%)`;
+            scoreCircle.querySelector('.score-value').textContent = `${accuracy}%`;
         }
+        
+        // 显示完成弹窗
+        document.getElementById('reviewCompletionModal').style.display = 'flex';
+        
+        // 绑定弹窗按钮事件
+        this.bindCompletionModalButtons();
     }
 
     bindCompletionModalButtons() {
-        console.log('🔗 绑定完成弹窗按钮');
-        
-        // 返回概览按钮
+        // 绑定返回概览按钮
         const backToOverviewBtn2 = document.getElementById('backToOverviewBtn2');
         if (backToOverviewBtn2) {
             backToOverviewBtn2.addEventListener('click', () => {
@@ -375,39 +399,51 @@ class ReviewOldWords {
             });
         }
         
-        // 复习错题按钮
+        // 绑定复习错题按钮
         const reviewWrongBtn = document.getElementById('reviewWrongBtn');
         if (reviewWrongBtn) {
             reviewWrongBtn.addEventListener('click', () => {
-                alert('复习错题功能暂未实现');
+                // 这里可以添加复习错题的逻辑
+                alert('复习错题功能正在开发中');
             });
         }
     }
 
     showNoWordsMessage() {
-        console.log('📚 没有单词可以复习');
+        console.log('📭 没有可复习的单词');
         
-        // 隐藏模式选择器
-        if (this.modeSelector) {
-            this.modeSelector.style.display = 'none';
-        }
-        
-        // 显示提示消息
-        document.body.innerHTML = `
-            <div class="completion-screen">
-                <i class="fas fa-book" style="font-size: 4rem; color: var(--primary-color);"></i>
+        // 创建提示消息
+        const message = `
+            <div style="text-align: center; padding: 40px;">
+                <i class="fas fa-book" style="font-size: 4rem; color: var(--primary-color); margin-bottom: 20px;"></i>
                 <h2>还没有学习的单词</h2>
-                <p>先去学习一些新单词吧！</p>
-                <button onclick="window.location.href='learn-new.html'" class="primary-btn">
+                <p style="margin: 20px 0;">先去学习一些新单词吧！</p>
+                <button onclick="window.location.href='learn-new.html'" class="primary-btn" style="margin-top: 20px;">
+                    <i class="fas fa-book"></i>
                     学习新词
                 </button>
             </div>
         `;
+        
+        // 替换主内容
+        const main = document.querySelector('main');
+        if (main) {
+            main.innerHTML = message;
+        }
     }
 }
 
 // 页面初始化
-window.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 复习页面加载完成');
-    new ReviewOldWords();
+    
+    // 检查是否在复习页面
+    if (document.getElementById('modeSelector')) {
+        console.log('✅ 在复习页面，开始初始化');
+        
+        setTimeout(function() {
+            window.reviewInstance = new ReviewOldWords();
+            console.log('🚀 ReviewOldWords 实例已创建');
+        }, 100);
+    }
 });
