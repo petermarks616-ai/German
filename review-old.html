@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>不背德语单词 - 复习旧词</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="review-page">
+    <!-- 复习页面头部 -->
+    <header class="review-header">
+        <div class="container">
+            <div class="review-header-content">
+                <button class="back-btn" onclick="window.location.href='overview.html'">
+                    <i class="fas fa-arrow-left"></i>
+                    返回
+                </button>
+                <div class="review-title">
+                    <h2>复习旧词</h2>
+                    <div class="review-subtitle">
+                        <i class="fas fa-gamepad"></i>
+                        选择测试模式
+                    </div>
+                </div>
+                <div class="review-info">
+                    <span class="review-count">
+                        <i class="fas fa-list-ol"></i>
+                        共 <span id="totalWords">10</span> 个单词
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 进度指示器 -->
+    <div class="review-progress-indicator">
+        <div class="container">
+            <div class="progress-content">
+                <div class="progress-info">
+                    <span class="progress-text">复习进度</span>
+                    <span class="progress-count" id="reviewProgressCount">1/10</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="reviewProgressFill"></div>
+                </div>
+                <div class="progress-stats">
+                    <span class="stat-item">
+                        <i class="fas fa-check"></i>
+                        <span id="correctCount">0</span> 正确
+                    </span>
+                    <span class="stat-item">
+                        <i class="fas fa-times"></i>
+                        <span id="wrongCount">0</span> 错误
+                    </span>
+                    <span class="stat-item">
+                        <i class="fas fa-clock"></i>
+                        <span id="timeSpent">0:00</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="container">
+        <!-- 复习模式卡片 -->
+        <div class="review-mode-selector" id="modeSelector">
+            <h3 class="mode-title">选择复习模式</h3>
+            <div class="mode-options">
+                <div class="mode-card active" data-mode="choice">
+                    <div class="mode-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <h4 class="mode-name">选择测试</h4>
+                    <p class="mode-desc">四选一，测试词汇记忆</p>
+                    <div class="mode-badge">
+                        <span class="badge-text">默认</span>
+                    </div>
+                </div>
+                <div class="mode-card" data-mode="typing">
+                    <div class="mode-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h4 class="mode-name">拼写测试</h4>
+                    <p class="mode-desc">输入翻译，测试拼写</p>
+                    <div class="mode-badge">
+                        <span class="badge-text">进阶</span>
+                    </div>
+                </div>
+                <div class="mode-card" data-mode="flashcard">
+                    <div class="mode-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h4 class="mode-name">闪卡复习</h4>
+                    <p class="mode-desc">快速浏览，强化记忆</p>
+                    <div class="mode-badge">
+                        <span class="badge-text">快速</span>
+                    </div>
+                </div>
+            </div>
+            <button class="start-review-btn primary-btn" id="startReviewBtn">
+                <i class="fas fa-play"></i>
+                开始复习
+            </button>
+        </div>
+
+        <!-- 选择测试卡片 -->
+        <div class="review-card" id="reviewCard" style="display: none;">
+            <!-- 单词显示 -->
+            <div class="review-word-section">
+                <div class="word-header">
+                    <span class="word-category" id="wordCategory">名词复习</span>
+                    <span class="difficulty" id="reviewDifficulty">中等</span>
+                </div>
+                
+                <div class="word-display">
+                    <h1 class="review-german-word" id="reviewGermanWord">das Haus</h1>
+                    <div class="word-hint">
+                        <i class="fas fa-info-circle"></i>
+                        <span>请选择正确的中文翻译</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 选项区域 -->
+            <div class="options-section">
+                <h3 class="section-title">
+                    <i class="fas fa-question-circle"></i>
+                    请选择正确的翻译
+                </h3>
+                
+                <div class="options-grid" id="optionsContainer">
+                    <!-- 动态生成选项 -->
+                </div>
+                
+                <!-- 提示区域 -->
+                <div class="hint-area" id="hintArea">
+                    <button class="hint-btn" id="showHintBtn">
+                        <i class="fas fa-lightbulb"></i>
+                        需要提示？
+                    </button>
+                    <div class="hint-content" id="hintContent" style="display: none;">
+                        <p>提示：这是一个表示建筑物的名词</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 控制按钮 -->
+            <div class="review-controls">
+                <button class="control-btn skip-btn" id="skipBtn">
+                    <i class="fas fa-forward"></i>
+                    跳过此题
+                </button>
+                
+                <div class="timer-container">
+                    <div class="timer-display">
+                        <i class="fas fa-clock"></i>
+                        <span id="timer">30</span> 秒
+                    </div>
+                    <div class="timer-bar">
+                        <div class="timer-fill" id="timerFill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 学习卡片（回答错误时显示） -->
+        <div class="learning-card" id="learningCard" style="display: none;">
+            <!-- 与learn-new.html中的学习卡片类似 -->
+            <!-- 为了节省空间，这里省略详细内容 -->
+        </div>
+    </main>
+
+    <!-- 复习完成弹窗 -->
+    <div class="review-completion-modal" id="reviewCompletionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fas fa-award"></i>
+                <h3>复习完成！</h3>
+            </div>
+            <div class="modal-body">
+                <div class="review-stats">
+                    <div class="stat-circle">
+                        <div class="circle-progress" id="scoreCircle">
+                            <span class="score-value">100%</span>
+                        </div>
+                        <span class="score-label">正确率</span>
+                    </div>
+                    
+                    <div class="stats-details">
+                        <div class="stat-row">
+                            <span class="stat-label">复习单词数</span>
+                            <span class="stat-value">10个</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">正确回答</span>
+                            <span class="stat-value" id="finalCorrect">8个</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">用时</span>
+                            <span class="stat-value" id="finalTime">5:30</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">获得积分</span>
+                            <span class="stat-value" id="pointsEarned">+150</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="performance-feedback">
+                    <h4>
+                        <i class="fas fa-comment"></i>
+                        学习反馈
+                    </h4>
+                    <p id="feedbackText">很棒！你对这些单词的掌握程度很好，继续保持！</p>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="modal-btn secondary-btn" id="reviewWrongBtn">
+                        <i class="fas fa-redo"></i>
+                        复习错题
+                    </button>
+                    <button class="modal-btn primary-btn" id="backToOverviewBtn2">
+                        <i class="fas fa-home"></i>
+                        返回概览
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/review-old.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/progress.js"></script>
+    <script src="js/utils.js"></script>
+</body>
+</html>
