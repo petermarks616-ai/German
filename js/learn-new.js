@@ -1,4 +1,4 @@
-// learn-new.js - 完整修复版
+// learn-new.js - 修正版
 import { generateVocabulary } from './api.js';
 import { generateVocabulary } from './progress.js';
 
@@ -43,6 +43,7 @@ class LearnNewWords {
         }
     }
     
+    // 添加 renderWord 方法
     renderWord() {
         console.log(`🎨 渲染单词 ${this.currentIndex + 1}/${this.words.length}`);
         
@@ -97,6 +98,7 @@ class LearnNewWords {
         this.updateProgressBar();
     }
     
+    // 添加 setupEventListeners 方法
     setupEventListeners() {
         console.log('🎮 设置事件监听器');
         
@@ -112,9 +114,6 @@ class LearnNewWords {
             });
         }
         
-        // 绑定完成弹窗的按钮
-        this.bindCompletionModalButtons();
-        
         // 键盘快捷键
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
@@ -125,42 +124,7 @@ class LearnNewWords {
         });
     }
     
-    bindCompletionModalButtons() {
-        console.log('🔗 绑定完成弹窗按钮');
-        
-        // 绑定返回概览按钮
-        const backToOverviewBtn = document.getElementById('backToOverviewBtn');
-        if (backToOverviewBtn) {
-            console.log('✅ 找到返回概览按钮');
-            // 移除已有的事件监听器
-            const newBtn = backToOverviewBtn.cloneNode(true);
-            backToOverviewBtn.parentNode.replaceChild(newBtn, backToOverviewBtn);
-            
-            // 添加新的事件监听器
-            document.getElementById('backToOverviewBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                console.log('🏠 返回概览');
-                window.location.href = 'overview.html';
-            });
-        }
-        
-        // 绑定立即复习按钮
-        const reviewNowBtn = document.getElementById('reviewNowBtn');
-        if (reviewNowBtn) {
-            console.log('✅ 找到立即复习按钮');
-            // 移除已有的事件监听器
-            const newReviewBtn = reviewNowBtn.cloneNode(true);
-            reviewNowBtn.parentNode.replaceChild(newReviewBtn, reviewNowBtn);
-            
-            // 添加新的事件监听器
-            document.getElementById('reviewNowBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                console.log('🔄 立即复习');
-                window.location.href = 'review-old.html';
-            });
-        }
-    }
-    
+    // 添加 handleNextWord 方法
     handleNextWord() {
         console.log('🔄 处理下一个单词');
         console.log('当前索引:', this.currentIndex);
@@ -194,6 +158,7 @@ class LearnNewWords {
         }, 300);
     }
     
+    // 添加 saveProgress 方法（简化版进度管理）
     saveProgress(word) {
         try {
             const storageKey = 'german_vocab_progress';
@@ -214,6 +179,7 @@ class LearnNewWords {
         }
     }
     
+    // 添加 updateProgressBar 方法
     updateProgressBar() {
         const progress = ((this.currentIndex + 1) / this.words.length) * 100;
         
@@ -229,15 +195,13 @@ class LearnNewWords {
         }
     }
     
+    // 添加 showCompletionMessage 方法
     showCompletionMessage() {
         console.log('🏆 显示完成消息');
         
         const modal = document.getElementById('completionModal');
         if (modal) {
             modal.style.display = 'flex';
-            
-            // 重新绑定按钮（确保事件有效）
-            this.bindCompletionModalButtons();
             
             // 更新完成时间
             const timeElement = document.getElementById('completionTime');
@@ -249,6 +213,7 @@ class LearnNewWords {
         }
     }
     
+    // 添加 showError 方法
     showError(message) {
         console.error('❌ 显示错误:', message);
         
