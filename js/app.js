@@ -1,5 +1,5 @@
 // app.js - 主应用控制器
-import { ProgressManager } from './progress.js';
+import { ProgressManager } from 'js/progress.js';
 
 class GermanVocabApp {
     constructor() {
