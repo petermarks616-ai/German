@@ -1,5 +1,5 @@
 // review-old.js - 复习旧词逻辑
-import { ProgressManager } from 'js/progress.js';
+import { ProgressManager } from './progress.js';
 
 class ReviewOldWords {
     constructor() {
