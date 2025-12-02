@@ -1,5 +1,6 @@
-// progress.js - 导出 ProgressManager 类
-export class ProgressManager {
+// progress.js - 添加正确的导出语句
+
+class ProgressManager {
     constructor() {
         this.storageKey = 'german_vocab_progress';
         this.loadProgress();
@@ -88,3 +89,7 @@ export class ProgressManager {
         return mastered.slice(-count * 2).slice(0, count);
     }
 }
+
+// 关键：添加导出语句
+export { ProgressManager };
+// 或者如果需要默认导出：export default ProgressManager;
