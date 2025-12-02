@@ -1,28 +1,95 @@
-<!-- index.html - 欢迎页面 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>不背德语单词</title>
+    <title>不背德语单词 - 首页</title>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/animations.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="welcome-page">
+    <!-- 背景装饰元素 -->
+    <div class="background-elements">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+    </div>
+    
     <div class="container">
-        <div class="welcome-card">
-            <h1 class="welcome-title">Willkommen! <br>欢迎来到不背德语单词</h1>
-            <p class="welcome-subtitle">轻松掌握德语词汇，自然学习不费力</p>
-            <button id="enterBtn" class="primary-btn">
-                <i class="fas fa-door-open"></i> 进入学习
-            </button>
-            <div class="decorative-elements">
-                <div class="shape shape-1"></div>
-                <div class="shape shape-2"></div>
+        <div class="welcome-card animate-fade-in">
+            <!-- 标题部分 -->
+            <div class="welcome-header">
+                <h1 class="welcome-title">
+                    <span class="deutsch-text">Willkommen!</span>
+                    <span class="chinese-text">欢迎来到不背德语单词</span>
+                </h1>
+                <div class="divider"></div>
+                <p class="welcome-subtitle">
+                    <i class="fas fa-graduation-cap"></i>
+                    轻松记忆德语词汇，享受学习过程
+                </p>
+            </div>
+            
+            <!-- 特色介绍 -->
+            <div class="features">
+                <div class="feature-item">
+                    <i class="fas fa-brain"></i>
+                    <span>智能记忆系统</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-robot"></i>
+                    <span>AI生成内容</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>学习进度追踪</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-gamepad"></i>
+                    <span>游戏化学习</span>
+                </div>
+            </div>
+            
+            <!-- 开始按钮 -->
+            <div class="action-container">
+                <button id="enterBtn" class="primary-btn animate-pulse">
+                    <i class="fas fa-play-circle"></i>
+                    开始学习之旅
+                    <span class="btn-arrow">→</span>
+                </button>
+                <p class="tip-text">
+                    <i class="fas fa-lightbulb"></i>
+                    每天只需10分钟，轻松掌握德语词汇
+                </p>
+            </div>
+            
+            <!-- 统计数据预览 -->
+            <div class="stats-preview">
+                <div class="stat-item">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">已学习词汇</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">连续学习天数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">掌握率</span>
+                </div>
             </div>
         </div>
+        
+        <!-- 底部信息 -->
+        <footer class="welcome-footer">
+            <p>© 2024 不背德语单词 | 让语言学习变得简单有趣</p>
+        </footer>
     </div>
+    
     <script src="js/app.js"></script>
+    <script src="js/progress.js"></script>
 </body>
 </html>
