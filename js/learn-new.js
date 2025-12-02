@@ -1,5 +1,6 @@
 // learn-new.js - 修正版
 import { generateVocabulary } from './api.js';
+import { ProgressManager } from './progress.js';
 
 class LearnNewWords {
     constructor() {
