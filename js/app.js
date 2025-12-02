@@ -1,13 +1,12 @@
-// 应用主控制器
+// app.js - 主应用控制器
 class GermanVocabApp {
     constructor() {
+        console.log('🎮 GermanVocabApp 初始化');
         this.init();
     }
 
     init() {
-        // 初始化事件监听器
         this.bindEvents();
-        // 检查并更新每日统计数据
         this.updateDailyStats();
     }
 
@@ -35,29 +34,44 @@ class GermanVocabApp {
                 window.location.href = 'review-old.html';
             });
         }
+
+        // 返回概览按钮
+        const backToOverviewBtns = document.querySelectorAll('[id*="backToOverview"]');
+        backToOverviewBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                window.location.href = 'overview.html';
+            });
+        });
+
+        // 完成弹窗按钮
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'reviewNowBtn') {
+                window.location.href = 'review-old.html';
+            }
+        });
     }
 
     updateDailyStats() {
-        const progressManager = new ProgressManager();
-        progressManager.resetDailyStats();
-        
-        // 更新概览页面的统计数据
-        const stats = progressManager.getStats();
-        
-        const elements = {
-            'masteredCount': stats.mastered,
-            'todayCount': stats.todayLearned,
-            'streakCount': stats.streak
-        };
-        
-        // 更新页面上的统计数字
-        Object.keys(elements).forEach(key => {
-            const element = document.getElementById(key);
-            if (element) {
-                // 添加动画效果
-                this.animateCounter(element, elements[key]);
-            }
-        });
+        if (typeof ProgressManager === 'function') {
+            const progressManager = new ProgressManager();
+            progressManager.resetDailyStats();
+            
+            const stats = progressManager.getStats();
+            
+            // 更新概览页面的统计数字
+            const elements = {
+                'masteredCount': stats.mastered,
+                'todayCount': stats.todayLearned,
+                'streakCount': stats.streak
+            };
+            
+            Object.keys(elements).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    this.animateCounter(element, elements[key]);
+                }
+            });
+        }
     }
 
     animateCounter(element, target) {
@@ -77,4 +91,5 @@ class GermanVocabApp {
 // 启动应用
 document.addEventListener('DOMContentLoaded', () => {
     window.app = new GermanVocabApp();
+    console.log('✅ 主应用已启动');
 });
