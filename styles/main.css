@@ -1,88 +1,480 @@
-/* 全局样式和变量 */
+/* ====== CSS 变量 ====== */
 :root {
-    --primary-color: #4361ee;
-    --secondary-color: #3a0ca3;
-    --accent-color: #4cc9f0;
-    --success-color: #4ade80;
-    --warning-color: #f59e0b;
-    --danger-color: #ef4444;
-    --light-bg: #f8fafc;
-    --dark-bg: #1e293b;
-    --card-bg: #ffffff;
-    --text-primary: #334155;
-    --text-secondary: #64748b;
-    --shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-    --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
-    --radius: 16px;
-    --radius-sm: 8px;
+    /* 主色调 */
+    --primary-50: #eff6ff;
+    --primary-100: #dbeafe;
+    --primary-200: #bfdbfe;
+    --primary-300: #93c5fd;
+    --primary-400: #60a5fa;
+    --primary-500: #3b82f6;
+    --primary-600: #2563eb;
+    --primary-700: #1d4ed8;
+    --primary-800: #1e40af;
+    --primary-900: #1e3a8a;
+    
+    /* 次要色调 */
+    --secondary-50: #f8fafc;
+    --secondary-100: #f1f5f9;
+    --secondary-200: #e2e8f0;
+    --secondary-300: #cbd5e1;
+    --secondary-400: #94a3b8;
+    --secondary-500: #64748b;
+    --secondary-600: #475569;
+    --secondary-700: #334155;
+    --secondary-800: #1e293b;
+    --secondary-900: #0f172a;
+    
+    /* 功能色 */
+    --success-50: #f0fdf4;
+    --success-100: #dcfce7;
+    --success-200: #bbf7d0;
+    --success-300: #86efac;
+    --success-400: #4ade80;
+    --success-500: #22c55e;
+    --success-600: #16a34a;
+    --success-700: #15803d;
+    --success-800: #166534;
+    --success-900: #14532d;
+    
+    --warning-50: #fffbeb;
+    --warning-100: #fef3c7;
+    --warning-200: #fde68a;
+    --warning-300: #fcd34d;
+    --warning-400: #fbbf24;
+    --warning-500: #f59e0b;
+    --warning-600: #d97706;
+    --warning-700: #b45309;
+    --warning-800: #92400e;
+    --warning-900: #78350f;
+    
+    --danger-50: #fef2f2;
+    --danger-100: #fee2e2;
+    --danger-200: #fecaca;
+    --danger-300: #fca5a5;
+    --danger-400: #f87171;
+    --danger-500: #ef4444;
+    --danger-600: #dc2626;
+    --danger-700: #b91c1c;
+    --danger-800: #991b1b;
+    --danger-900: #7f1d1d;
+    
+    /* 特殊色 */
+    --deutsch-blue: #0066b3;
+    --deutsch-yellow: #ffcc00;
+    --deutsch-red: #dd0000;
+    --deutsch-black: #000000;
+    
+    /* 渐变 */
+    --gradient-primary: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+    --gradient-success: linear-gradient(135deg, var(--success-500), var(--success-700));
+    --gradient-warning: linear-gradient(135deg, var(--warning-500), var(--warning-700));
+    --gradient-danger: linear-gradient(135deg, var(--danger-500), var(--danger-700));
+    --gradient-deutsch: linear-gradient(135deg, var(--deutsch-black), var(--deutsch-red), var(--deutsch-yellow));
+    
+    /* 阴影 */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    
+    /* 圆角 */
+    --radius-sm: 0.375rem;
+    --radius: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+    --radius-2xl: 2rem;
+    --radius-full: 9999px;
+    
+    /* 间距 */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-20: 5rem;
+    --space-24: 6rem;
+    
+    /* 字体 */
+    --font-sans: 'Inter', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 }
 
-* {
+/* ====== 重置样式 ====== */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    color: var(--text-primary);
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
 }
 
-/* 欢迎页面样式 */
+body {
+    font-family: var(--font-sans);
+    color: var(--secondary-800);
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* ====== 容器布局 ====== */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+
+/* ====== 页面特定样式 ====== */
 .welcome-page {
+    min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-.welcome-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    padding: 60px 40px;
-    border-radius: var(--radius);
-    text-align: center;
-    max-width: 600px;
-    width: 90%;
-    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, 
+        rgba(59, 130, 246, 0.1) 0%,
+        rgba(168, 85, 247, 0.1) 100%);
     position: relative;
     overflow: hidden;
 }
 
+.overview-page {
+    padding-bottom: 80px;
+}
+
+.learning-page, .review-page {
+    padding-bottom: 40px;
+}
+
+/* ====== 背景装饰元素 ====== */
+.background-elements {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    filter: blur(40px);
+}
+
+.circle-1 {
+    width: 300px;
+    height: 300px;
+    background: var(--primary-500);
+    top: 10%;
+    left: 10%;
+    animation: float 20s ease-in-out infinite;
+}
+
+.circle-2 {
+    width: 400px;
+    height: 400px;
+    background: var(--success-500);
+    bottom: 10%;
+    right: 10%;
+    animation: float 25s ease-in-out infinite reverse;
+}
+
+.circle-3 {
+    width: 200px;
+    height: 200px;
+    background: var(--warning-500);
+    top: 50%;
+    left: 80%;
+    animation: float 15s ease-in-out infinite;
+}
+
+/* ====== 卡片样式 ====== */
+.welcome-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-16) var(--space-10);
+    text-align: center;
+    max-width: 800px;
+    width: 90%;
+    box-shadow: var(--shadow-xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-deutsch);
+}
+
+/* ====== 标题样式 ====== */
+.welcome-header {
+    margin-bottom: var(--space-10);
+}
+
 .welcome-title {
-    font-size: 2.8rem;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.deutsch-text {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: var(--gradient-deutsch);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 20px;
-    line-height: 1.2;
+    letter-spacing: -0.5px;
+}
+
+.chinese-text {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--secondary-800);
+    margin-top: var(--space-2);
+}
+
+.divider {
+    width: 100px;
+    height: 4px;
+    background: var(--gradient-primary);
+    margin: var(--space-6) auto;
+    border-radius: var(--radius-full);
 }
 
 .welcome-subtitle {
-    font-size: 1.2rem;
-    color: var(--text-secondary);
-    margin-bottom: 40px;
+    font-size: 1.25rem;
+    color: var(--secondary-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
 }
 
-/* 按钮样式 */
+/* ====== 功能特性 ====== */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-6);
+    margin: var(--space-12) 0;
+    padding: var(--space-6);
+    background: var(--secondary-50);
+    border-radius: var(--radius-xl);
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: white;
+    border-radius: var(--radius-lg);
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.feature-item i {
+    color: var(--primary-500);
+    font-size: 1.25rem;
+}
+
+/* ====== 按钮样式 ====== */
+.action-container {
+    margin: var(--space-12) 0;
+}
+
 .primary-btn {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: var(--gradient-primary);
     color: white;
     border: none;
-    padding: 18px 40px;
-    font-size: 1.1rem;
-    border-radius: 50px;
+    padding: var(--space-5) var(--space-12);
+    font-size: 1.125rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
     cursor: pointer;
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    font-weight: 600;
+    gap: var(--space-3);
+    position: relative;
+    overflow: hidden;
+}
+
+.primary-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.primary-btn:hover::before {
+    left: 100%;
 }
 
 .primary-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.primary-btn:active {
+    transform: translateY(0);
+}
+
+.btn-arrow {
+    font-size: 1.25rem;
+    transition: transform 0.3s ease;
+}
+
+.primary-btn:hover .btn-arrow {
+    transform: translateX(4px);
+}
+
+.secondary-btn {
+    background: transparent;
+    color: var(--primary-600);
+    border: 2px solid var(--primary-300);
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.secondary-btn:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-500);
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+    background: var(--secondary-100);
+}
+
+/* ====== 统计预览 ====== */
+.stats-preview {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-8);
+    margin-top: var(--space-10);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--secondary-200);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary-600);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--secondary-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: var(--space-1);
+}
+
+/* ====== 页脚样式 ====== */
+.welcome-footer {
+    margin-top: var(--space-8);
+    color: var(--secondary-500);
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+/* ====== 响应式设计 ====== */
+@media (max-width: 768px) {
+    :root {
+        font-size: 14px;
+    }
+    
+    .container {
+        padding: 0 var(--space-4);
+    }
+    
+    .welcome-card {
+        padding: var(--space-8) var(--space-6);
+        width: 95%;
+    }
+    
+    .deutsch-text {
+        font-size: 2.5rem;
+    }
+    
+    .chinese-text {
+        font-size: 1.75rem;
+    }
+    
+    .features {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+    }
+    
+    .stats-preview {
+        flex-direction: column;
+        gap: var(--space-4);
+    }
+    
+    .primary-btn {
+        padding: var(--space-4) var(--space-8);
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .deutsch-text {
+        font-size: 2rem;
+    }
+    
+    .chinese-text {
+        font-size: 1.5rem;
+    }
+    
+    .welcome-subtitle {
+        font-size: 1rem;
+    }
 }
